@@ -30,18 +30,22 @@ public class BibliothequeApp extends Application {
 	}
 	
 	// Méthodes pour créer chaque onglet
+	
+	// Crée l'onglet pour la gestion des livres
 	private Tab creerOngletLivres() {
 		Tab tabLivres = new Tab("Livres");
 		
 		return tabLivres;
 	}
 	
+	// Créer l'onglet pour la gestion des utilisateurs
 	private Tab creerOngletUtilisateurs() {
 		Tab tabUtilisateurs = new Tab("Utilisateurs");
 		
 		return tabUtilisateurs;
 	}		// Méthodes pour créer chaque onglet
 	
+	// Créer l'onglet pour la gestion des transactions d'emprunts
 	private Tab creerOngletEmprunts() {
 		Tab tabEmprunts = new Tab("Emprunts");
 		
