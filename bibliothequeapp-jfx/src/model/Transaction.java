@@ -16,10 +16,7 @@ public class Transaction {
 		return livre;
 	}
 	
-	// Method qui verifie si le livre a été retourné
-	public boolean isRetourne() {
-		return retourne;
-	}
+	
 	// Constructeur avec 2 paramètres
 	public Transaction(String utilisateur, String livre) {
 		this.utilisateur = utilisateur;
@@ -27,6 +24,11 @@ public class Transaction {
 		this.retourne = false;
 	}
 	
+	// Methode qui verifie si le livre a été retourné
+	public boolean isRetourne() {
+		return retourne;
+	}
+		
 	// Methode retournerLivre() qui marque le livre comme retourné
 	public void retournerLivre() {
 		this.retourne = true;
