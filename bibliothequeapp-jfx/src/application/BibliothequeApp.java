@@ -1,6 +1,7 @@
 package application;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -33,7 +34,18 @@ public class BibliothequeApp extends Application {
 	
 	// Crée l'onglet pour la gestion des livres
 	private Tab creerOngletLivres() {
+		// creer un nouvel onglet
 		Tab tabLivres = new Tab("Livres");
+		
+		// Creer a conteneur VBox container pour organiser verticallement les composants.
+		VBox vbox = new VBox(10);
+		vbox.getChildren().addAll(
+				);		
+		// mettre un padding a la VBox
+		vbox.setPadding(new Insets(10));
+		
+		// mettre la VBox comme de l'onglet tab
+		tabLivres.setContent(vbox);
 		
 		return tabLivres;
 	}
