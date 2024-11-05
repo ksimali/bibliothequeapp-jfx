@@ -1,5 +1,8 @@
 package application;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -21,10 +24,15 @@ public class BibliothequeApp extends Application {
     private ListView<Livre> listeLivres = new ListView<>();
     // ListView pour afficher tous les utilisateurs
     private ListView<Utilisateur> listeUtilisateurs = new ListView<>();
+ // ListView pour afficher tous les livres empruntés
+    private ListView<String> listeEmprunts = new ListView<>();
     
     // Déclarez les ComboBox comme des variables d'instance
     private ComboBox<Utilisateur> comboBoxUtilisateurs = new ComboBox<>();
     private ComboBox<Livre> comboBoxLivres = new ComboBox<>();
+    
+    // List pour garder une trace des livres empruntés
+    private List<String> transactions = new ArrayList<>();
     
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -178,10 +186,31 @@ public class BibliothequeApp extends Application {
 		Button enregistrerEmpruntButton = new Button("Enregistrer Emprunt");
 		Button retournerLivreButton = new Button("Retourner Livre");
 		
+		// action a effectuer lors de l'enregistrement d'un Emprunt de livre 
+		enregistrerEmpruntButton.setOnAction((e) -> {
+			// recupere les élements selectionné du combobox
+			Utilisateur utilisateur = comboBoxUtilisateurs.getValue();
+			Livre livre = comboBoxLivres.getValue();
+			if(utilisateur != null && livre != null) {
+				String transaction = utilisateur.getNom() + " a emprunté" + livre.getTitre();
+				transactions.add(transaction);
+				listeEmprunts.getItems().add(transaction);
+			}
+		});
+		
+		// action a effectuer lors  du retour d'un livre
+		retournerLivreButton.setOnAction((e) -> {
+			String transaction = listeEmprunts.getSelectionModel().getSelectedItem();
+            if (transaction != null) {
+                transactions.remove(transaction);
+                listeEmprunts.getItems().remove(transaction);
+            }
+		});
+		
 		// Ajout des composant(ComboBox, bouton et ListView) à un conteneur vertical
 		// Créer un conteneur (VBox) pour organiser les composants crées ci-dessus verticalement 
 	    VBox vbox = new VBox(10); // espaces de  10 pixels entre les élements
-	    vbox.getChildren().addAll(comboBoxUtilisateurs, comboBoxLivres, listeEmprunts, enregistrerEmpruntButton);
+	    vbox.getChildren().addAll(comboBoxUtilisateurs, comboBoxLivres, listeEmprunts, enregistrerEmpruntButton, retournerLivreButton);
 
 	    // Mettre a padding de 10px pour la VBox pour ajouter un espace autour du conteneur
 	    vbox.setPadding(new Insets(10));
