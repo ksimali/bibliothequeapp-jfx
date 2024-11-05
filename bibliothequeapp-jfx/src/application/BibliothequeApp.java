@@ -48,14 +48,32 @@ public class BibliothequeApp extends Application {
 		
 		// Créer un bouton pour ajouter un nouveau livre à la liste
 		Button ajouterLivreButton = new Button("Ajouter Livre");
-		ajouterLivreButton.setOnAction(null);
 		
 		// Créer une ListView pour afficher la liste des livres
 		ListView<Livre> listeLivres = new ListView<>();
 		
+		// action à executé au click du bouton Ajouter Livre
+		ajouterLivreButton.setOnAction((e) -> {
+			String titre = titreLivreField.getText();
+			if(!titre.isEmpty()) {
+				// Ajouter un nouveau livre avec le titre indiqué dans le TextField
+				listeLivres.getItems().add(new Livre(titre));
+				// Delete le TextField après l'ajout
+				titreLivreField.clear();
+			}
+		});
+		
 		// Create a button to remove the selected book from the list
 	    Button supprimerLivreButton = new Button("Supprimer Livre");
 		
+	    // Action à executé au click du button supprimer
+ 		supprimerLivreButton.setOnAction((e) -> {
+ 			Livre livreSelectionne = listeLivres.getSelectionModel().getSelectedItem();
+ 			if(livreSelectionne != null) {
+ 				listeLivres.getItems().remove(livreSelectionne);
+ 			}
+ 		});
+ 		
 		// Create a container (VBox) to organize the components vertically
 	    VBox vbox = new VBox(10); // Spacing of 10 pixels between elements
 	    vbox.getChildren().addAll(titreLivreField, ajouterLivreButton, listeLivres, supprimerLivreButton);
