@@ -15,7 +15,13 @@ import model.Livre;
 import model.Utilisateur;
 
 public class BibliothequeApp extends Application {
-
+	
+	// Déclarez les ListView comme des variables d'instance
+	// ListView pour afficher la liste des livres
+    private ListView<Livre> listeLivres = new ListView<>();
+    // ListView pour afficher tous les utilisateurs
+    private ListView<Utilisateur> listeUtilisateurs = new ListView<>();
+    
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// Créer le TabPane pour gérer les onglets
@@ -50,9 +56,6 @@ public class BibliothequeApp extends Application {
 		
 		// Créer un bouton pour ajouter un nouveau livre à la liste
 		Button ajouterLivreButton = new Button("Ajouter Livre");
-		
-		// Créer une ListView pour afficher la liste des livres
-		ListView<Livre> listeLivres = new ListView<>();
 		
 		// action à executé au click du bouton Ajouter Livre
 		ajouterLivreButton.setOnAction((e) -> {
@@ -104,9 +107,6 @@ public class BibliothequeApp extends Application {
 		
 		// Créer un button pour supprimer un utilisateur
 		Button supprimerUtilisateurButton = new Button("Supprimer utilisateur");
-		
-		// Créer une ListView pour afficher tous les utilisateurs
-		ListView<Utilisateur> listeUtilisateurs = new ListView<>();
 		
 		// Logique d'ajout et suppression des utilisateurs
 		ajouterUtilisateurButton.setOnAction((e) -> {
