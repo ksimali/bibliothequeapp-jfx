@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -139,8 +140,36 @@ public class BibliothequeApp extends Application {
 	
 	// Créer l'onglet pour la gestion des transactions d'emprunts
 	private Tab creerOngletEmprunts() {
+		// Créer l'onglet Emprunts
 		Tab tabEmprunts = new Tab("Emprunts");
 		
+		// ComboBox pour sélectionner l'utilisateur
+		ComboBox<Utilisateur> comboBoxUtilisateurs = new ComboBox<>();
+		comboBoxUtilisateurs.setPromptText("Selectionner un utilisateur");
+		
+		// Combobo pour sélectionner un livre
+		ComboBox<Livre> comboBoxLivres = new ComboBox<>();
+		comboBoxLivres.setPromptText("Selectionner un livre");
+		
+		// Récupération des données et ajout aux ComboBox
+		
+		
+		// Une ListView pour afficher la liste des emprunts enregistrés
+		ListView<String> listeEmprunts = new ListView<>();
+		
+		// Créer un bouton pour enregistrer un emprunt
+		Button enregistrerEmpruntButton = new Button("Enregistrer Emprunt");
+		
+		// Ajout des composant(ComboBox, bouton et ListView) à un conteneur vertical
+		// Créer un conteneur (VBox) pour organiser les composants crées ci-dessus verticalement 
+	    VBox vbox = new VBox(10); // espaces de  10 pixels entre les élements
+	    vbox.getChildren().addAll(comboBoxUtilisateurs, comboBoxLivres, listeEmprunts, enregistrerEmpruntButton);
+
+	    // Mettre a padding de 10px pour la VBox pour ajouter un espace autour du conteneur
+	    vbox.setPadding(new Insets(10));
+
+	    // Mettre la VBox comme contenu de l'onglet "Emprunts"
+	    tabEmprunts.setContent(vbox);
 		return tabEmprunts;
 	}
 	
