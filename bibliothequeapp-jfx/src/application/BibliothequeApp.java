@@ -65,7 +65,7 @@ public class BibliothequeApp extends Application {
 	    // Set the VBox as the content of the "Livres" tab
 	    tabLivres.setContent(vbox);
 	    
-		// Implémenter le gui et la logique d'ajout/suppression de livres
+	
 		return tabLivres;
 	}
 	
