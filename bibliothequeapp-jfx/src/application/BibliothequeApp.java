@@ -22,6 +22,10 @@ public class BibliothequeApp extends Application {
     // ListView pour afficher tous les utilisateurs
     private ListView<Utilisateur> listeUtilisateurs = new ListView<>();
     
+    // Déclarez les ComboBox comme des variables d'instance
+    private ComboBox<Utilisateur> comboBoxUtilisateurs = new ComboBox<>();
+    private ComboBox<Livre> comboBoxLivres = new ComboBox<>();
+    
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// Créer le TabPane pour gérer les onglets
@@ -57,6 +61,9 @@ public class BibliothequeApp extends Application {
 		// Créer un bouton pour ajouter un nouveau livre à la liste
 		Button ajouterLivreButton = new Button("Ajouter Livre");
 		
+		// Créer une ListView pour afficher la liste des livres
+	    listeLivres = new ListView<>();
+	    
 		// action à executé au click du bouton Ajouter Livre
 		ajouterLivreButton.setOnAction((e) -> {
 			String titre = titreLivreField.getText();
@@ -65,6 +72,8 @@ public class BibliothequeApp extends Application {
 				listeLivres.getItems().add(new Livre(titre));
 				// Delete le TextField après l'ajout
 				titreLivreField.clear();
+				// Met à jour les ComboBox dans l'onglet emprunts
+		        updateComboBoxes(comboBoxUtilisateurs, comboBoxLivres);
 			}
 		});
 		
@@ -76,6 +85,8 @@ public class BibliothequeApp extends Application {
  			Livre livreSelectionne = listeLivres.getSelectionModel().getSelectedItem();
  			if(livreSelectionne != null) {
  				listeLivres.getItems().remove(livreSelectionne);
+ 				// Met à jour les ComboBox dans l'onglet emprunts
+ 		        updateComboBoxes(comboBoxUtilisateurs, comboBoxLivres);
  			}
  		});
  		
@@ -108,6 +119,9 @@ public class BibliothequeApp extends Application {
 		// Créer un button pour supprimer un utilisateur
 		Button supprimerUtilisateurButton = new Button("Supprimer utilisateur");
 		
+		// Créer une ListView pour afficher la liste des utilisateurs
+		listeUtilisateurs = new ListView<>();
+		
 		// Logique d'ajout et suppression des utilisateurs
 		ajouterUtilisateurButton.setOnAction((e) -> {
 			// Récupérer le contenu du nomUtilisateurField
@@ -116,12 +130,17 @@ public class BibliothequeApp extends Application {
 			listeUtilisateurs.getItems().add(new Utilisateur(nom));
 			// Delete le nomUtilisateurField après l'ajout
 			nomUtilisateurField.clear();
+			
+			// Met à jour les ComboBox dans l'onglet emprunts
+	        updateComboBoxes(comboBoxUtilisateurs, comboBoxLivres);
 		});
 		
 		supprimerUtilisateurButton.setOnAction((e) -> {
 			Utilisateur utilisateurSelectionne = listeUtilisateurs.getSelectionModel().getSelectedItem();
 			if(utilisateurSelectionne != null) {
 				listeUtilisateurs.getItems().remove(utilisateurSelectionne);
+				// Mettez à jour les ComboBox dans l'onglet emprunts
+		        updateComboBoxes(comboBoxUtilisateurs, comboBoxLivres);
 			}
 		});
 		
@@ -129,10 +148,10 @@ public class BibliothequeApp extends Application {
 	    VBox vbox = new VBox(10); // espace de 10 pixels entre les elements
 	    vbox.getChildren().addAll(nomUtilisateurField, ajouterUtilisateurButton, listeUtilisateurs, supprimerUtilisateurButton);
 
-	    // Mettre a padding de 10px pour la VBox pour ajouter un espace autour du conteneur
+	    // Met un padding de 10px pour la VBox pour ajouter un espace autour du conteneur
 	    vbox.setPadding(new Insets(10));
 
-	    // Mettre la VBox comme le contenu de l'onglet "Utilisateurs"
+	    // Met la VBox comme le contenu de l'onglet "Utilisateurs"
 	    tabUtilisateurs.setContent(vbox);
 		
 		return tabUtilisateurs;
@@ -143,16 +162,14 @@ public class BibliothequeApp extends Application {
 		// Créer l'onglet Emprunts
 		Tab tabEmprunts = new Tab("Emprunts");
 		
-		// ComboBox pour sélectionner l'utilisateur
-		ComboBox<Utilisateur> comboBoxUtilisateurs = new ComboBox<>();
+		// Initialisation ComboBox pour sélectionner l'utilisateur
 		comboBoxUtilisateurs.setPromptText("Selectionner un utilisateur");
-		
-		// Combobo pour sélectionner un livre
-		ComboBox<Livre> comboBoxLivres = new ComboBox<>();
+			
+		// Initialisation ComboBox pour sélectionner un livre
 		comboBoxLivres.setPromptText("Selectionner un livre");
 		
 		// Récupération des données et ajout aux ComboBox
-		
+		updateComboBoxes(comboBoxUtilisateurs, comboBoxLivres);
 		
 		// Une ListView pour afficher la liste des emprunts enregistrés
 		ListView<String> listeEmprunts = new ListView<>();
@@ -171,6 +188,16 @@ public class BibliothequeApp extends Application {
 	    // Mettre la VBox comme contenu de l'onglet "Emprunts"
 	    tabEmprunts.setContent(vbox);
 		return tabEmprunts;
+	}
+	
+	// Methode pour mettre a jour le contenu des ComboBox
+	private void updateComboBoxes(ComboBox<Utilisateur> comboBoxUtilisateurs, ComboBox<Livre> comboBoxLivres) {
+	    comboBoxUtilisateurs.getItems().clear(); // Vide les ComboBox
+	    comboBoxLivres.getItems().clear();
+	    
+	    // Ajoute les utilisateurs et livres actuels aux ComboBox
+	    comboBoxUtilisateurs.getItems().addAll(listeUtilisateurs.getItems());
+	    comboBoxLivres.getItems().addAll(listeLivres.getItems());
 	}
 	
 	
