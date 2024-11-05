@@ -44,10 +44,11 @@ public class BibliothequeApp extends Application {
 		//Ajouter les composants pour gérer les livres(TextField, ListView, Button)
 		// Créer un TextField pour entrer le titre du livre
 		TextField titreLivreField = new TextField();
-		titreLivreField.setPromptText("Recherche du livre par titre");
+		titreLivreField.setPromptText("Titre du livre");
 		
 		// Créer un bouton pour ajouter un nouveau livre à la liste
 		Button ajouterLivreButton = new Button("Ajouter Livre");
+		ajouterLivreButton.setOnAction(null);
 		
 		// Créer une ListView pour afficher la liste des livres
 		ListView<Livre> listeLivres = new ListView<>();
