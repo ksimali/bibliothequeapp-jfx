@@ -2,9 +2,9 @@ package model;
 
 public class Transaction {
 	// Attributs 
-	private String utilisateur;
-	private String livre;
-	private boolean retourne;
+	private String utilisateur; // Nom du user qui a emprunté le livre
+	private String livre; // titre du livre emprunté
+	private boolean retourne; // statut de retour du livre
 	
 	// Getters and Setters
 	// Recupère le nom de l'utilisateur
