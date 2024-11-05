@@ -3,10 +3,14 @@ package application;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.Livre;
 
 public class BibliothequeApp extends Application {
 
@@ -37,16 +41,31 @@ public class BibliothequeApp extends Application {
 		// creer un nouvel onglet
 		Tab tabLivres = new Tab("Livres");
 		
-		// Creer a conteneur VBox container pour organiser verticallement les composants.
-		VBox vbox = new VBox(10);
-		vbox.getChildren().addAll(
-				);		
-		// mettre un padding a la VBox
-		vbox.setPadding(new Insets(10));
+		//Ajouter les composants pour gérer les livres(TextField, ListView, Button)
+		// Créer un TextField pour entrer le titre du livre
+		TextField titreLivreField = new TextField();
+		titreLivreField.setPromptText("Recherche du livre par titre");
 		
-		// mettre la VBox comme de l'onglet tab
-		tabLivres.setContent(vbox);
+		// Créer un bouton pour ajouter un nouveau livre à la liste
+		Button ajouterLivreButton = new Button("Ajouter Livre");
 		
+		// Créer une ListView pour afficher la liste des livres
+		ListView<Livre> listeLivres = new ListView<>();
+		
+		// Create a button to remove the selected book from the list
+	    Button supprimerLivreButton = new Button("Supprimer Livre");
+		
+		// Create a container (VBox) to organize the components vertically
+	    VBox vbox = new VBox(10); // Spacing of 10 pixels between elements
+	    vbox.getChildren().addAll(titreLivreField, ajouterLivreButton, listeLivres, supprimerLivreButton);
+
+	    // Set padding for the VBox to add spacing around the edges
+	    vbox.setPadding(new Insets(10));
+
+	    // Set the VBox as the content of the "Livres" tab
+	    tabLivres.setContent(vbox);
+	    
+		// Implémenter le gui et la logique d'ajout/suppression de livres
 		return tabLivres;
 	}
 	
@@ -54,6 +73,7 @@ public class BibliothequeApp extends Application {
 	private Tab creerOngletUtilisateurs() {
 		Tab tabUtilisateurs = new Tab("Utilisateurs");
 		
+		//
 		return tabUtilisateurs;
 	}		// Méthodes pour créer chaque onglet
 	
