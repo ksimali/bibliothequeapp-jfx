@@ -8,9 +8,16 @@ public class Utilisateur {
 	public String getNom() {
 		return nom;
 	}
+	
 	// Constructor
 	public Utilisateur(String nom) {
 		this.nom = nom;
+	}
+	
+	// an Override toString() method
+	@Override
+	public String toString() {
+		return nom;
 	}
 	
 
