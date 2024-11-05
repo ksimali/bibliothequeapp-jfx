@@ -174,8 +174,9 @@ public class BibliothequeApp extends Application {
 		// Une ListView pour afficher la liste des emprunts enregistrés
 		ListView<String> listeEmprunts = new ListView<>();
 		
-		// Créer un bouton pour enregistrer un emprunt
+		// Créer les  boutons pour enregistrer un emprunt et retourner livre
 		Button enregistrerEmpruntButton = new Button("Enregistrer Emprunt");
+		Button retournerLivreButton = new Button("Retourner Livre");
 		
 		// Ajout des composant(ComboBox, bouton et ListView) à un conteneur vertical
 		// Créer un conteneur (VBox) pour organiser les composants crées ci-dessus verticalement 
