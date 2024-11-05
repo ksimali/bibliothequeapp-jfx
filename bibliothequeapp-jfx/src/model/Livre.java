@@ -13,4 +13,11 @@ public class Livre {
 	public Livre(String titre) {
 		this.titre = titre;
 	}
+	
+	// Override the toString() method
+	@Override
+	public String toString() {
+		return titre;
+	}
+	
 }
