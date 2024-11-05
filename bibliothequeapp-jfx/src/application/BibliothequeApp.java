@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Livre;
+import model.Utilisateur;
 
 public class BibliothequeApp extends Application {
 
@@ -41,7 +42,7 @@ public class BibliothequeApp extends Application {
 		// creer un nouvel onglet
 		Tab tabLivres = new Tab("Livres");
 		
-		//Ajouter les composants pour gérer les livres(TextField, ListView, Button)
+		//Ajouter les composants pour gérer les livres(TextField, ListView, AjouterLivreButton, SupprimerLivrebutton)
 		// Créer un TextField pour entrer le titre du livre
 		TextField titreLivreField = new TextField();
 		titreLivreField.setPromptText("Titre du livre");
@@ -74,14 +75,14 @@ public class BibliothequeApp extends Application {
  			}
  		});
  		
-		// Create a container (VBox) to organize the components vertically
-	    VBox vbox = new VBox(10); // Spacing of 10 pixels between elements
+		// Créer un conteneur (VBox) pour organiser les composants crées ci-dessus verticalement 
+	    VBox vbox = new VBox(10); // espaces de  10 pixels entre les élements
 	    vbox.getChildren().addAll(titreLivreField, ajouterLivreButton, listeLivres, supprimerLivreButton);
 
-	    // Set padding for the VBox to add spacing around the edges
+	    // Mettre a padding de 10px pour la VBox pour ajouter un espace autour du conteneur
 	    vbox.setPadding(new Insets(10));
 
-	    // Set the VBox as the content of the "Livres" tab
+	    // Mettre la VBox comme contenu de l'onglet "Livres"
 	    tabLivres.setContent(vbox);
 	    
 	
@@ -92,9 +93,49 @@ public class BibliothequeApp extends Application {
 	private Tab creerOngletUtilisateurs() {
 		Tab tabUtilisateurs = new Tab("Utilisateurs");
 		
-		//
+		// Ajout des composants pour gérer les utilisateurs(TextField, ListView, AjouterUserButton, SupprimerUserButton)
+		// Ajout TextField pour entre le nom de l'utilisateur
+		TextField nomUtilisateurField = new TextField();
+		nomUtilisateurField.setPromptText("nom de l'utilisateur");
+		
+		// Créer un button pour ajouter un nouvel utilisateur
+		Button ajouterUtilisateurButton = new Button("Ajouter utilisateur");
+		
+		// Créer un button pour supprimer un utilisateur
+		Button supprimerUtilisateurButton = new Button("Supprimer utilisateur");
+		
+		// Créer une ListView pour afficher tous les utilisateurs
+		ListView<Utilisateur> listeUtilisateurs = new ListView<>();
+		
+		// Logique d'ajout et suppression des utilisateurs
+		ajouterUtilisateurButton.setOnAction((e) -> {
+			// Récupérer le contenu du nomUtilisateurField
+			String nom = nomUtilisateurField.getText();
+			// Ajout un utilisateur avec le nom indiqué dans le nomUtilisateurField
+			listeUtilisateurs.getItems().add(new Utilisateur(nom));
+			// Delete le nomUtilisateurField après l'ajout
+			nomUtilisateurField.clear();
+		});
+		
+		supprimerUtilisateurButton.setOnAction((e) -> {
+			Utilisateur utilisateurSelectionne = listeUtilisateurs.getSelectionModel().getSelectedItem();
+			if(utilisateurSelectionne != null) {
+				listeUtilisateurs.getItems().remove(utilisateurSelectionne);
+			}
+		});
+		
+		// Créer un conteneur (VBox) pour organiser les composants crées ci-dessus verticalement 
+	    VBox vbox = new VBox(10); // espace de 10 pixels entre les elements
+	    vbox.getChildren().addAll(nomUtilisateurField, ajouterUtilisateurButton, listeUtilisateurs, supprimerUtilisateurButton);
+
+	    // Mettre a padding de 10px pour la VBox pour ajouter un espace autour du conteneur
+	    vbox.setPadding(new Insets(10));
+
+	    // Mettre la VBox comme le contenu de l'onglet "Utilisateurs"
+	    tabUtilisateurs.setContent(vbox);
+		
 		return tabUtilisateurs;
-	}		// Méthodes pour créer chaque onglet
+	}
 	
 	// Créer l'onglet pour la gestion des transactions d'emprunts
 	private Tab creerOngletEmprunts() {
