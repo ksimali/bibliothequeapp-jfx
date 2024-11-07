@@ -179,9 +179,6 @@ public class BibliothequeApp extends Application {
 		// Récupération des données et ajout aux ComboBox
 		updateComboBoxes(comboBoxUtilisateurs, comboBoxLivres);
 		
-		// Une ListView pour afficher la liste des emprunts enregistrés
-		ListView<String> listeEmprunts = new ListView<>();
-		
 		// Créer les  boutons pour enregistrer un emprunt et retourner livre
 		Button enregistrerEmpruntButton = new Button("Enregistrer Emprunt");
 		Button retournerLivreButton = new Button("Retourner Livre");
