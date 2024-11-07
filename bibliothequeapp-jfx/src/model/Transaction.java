@@ -29,9 +29,9 @@ public class Transaction {
         this.estRetourne = false; // Par défaut, l'emprunt n'est pas retourné
     }
 
-    // Méthode retournerLivre() qui marque le livre comme retourné
-    public void retournerLivre() {
-        this.estRetourne = true;
+    // Méthode setRetourne() qui marque le livre comme retourné
+    public void setRetourne(boolean estRetourne) {
+        this.estRetourne = estRetourne;
     }
     
     // Méthode pour afficher l'information de la transaction sous forme de chaîne de caractères
