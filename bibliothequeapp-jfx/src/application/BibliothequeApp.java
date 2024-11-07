@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.application.Application;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -11,28 +12,31 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Livre;
+import model.Transaction;
 import model.Utilisateur;
 
 public class BibliothequeApp extends Application {
 	
-	// Déclarez les ListView comme des variables d'instance
 	// ListView pour afficher la liste des livres
     private ListView<Livre> listeLivres = new ListView<>();
     // ListView pour afficher tous les utilisateurs
     private ListView<Utilisateur> listeUtilisateurs = new ListView<>();
- // ListView pour afficher tous les livres empruntés
-    private ListView<String> listeEmprunts = new ListView<>();
+    
+    // Création du TableView pour afficher les transactions
+    TableView<Transaction> tableEmprunts = new TableView<>();
     
     // Déclarez les ComboBox comme des variables d'instance
     private ComboBox<Utilisateur> comboBoxUtilisateurs = new ComboBox<>();
     private ComboBox<Livre> comboBoxLivres = new ComboBox<>();
     
     // List pour garder une trace des livres empruntés
-    private List<String> transactions = new ArrayList<>();
+    private List<Transaction> transactions = new ArrayList<>();
     
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -81,7 +85,7 @@ public class BibliothequeApp extends Application {
 				// Delete le TextField après l'ajout
 				titreLivreField.clear();
 				// Met à jour les ComboBox dans l'onglet emprunts
-		        updateComboBoxes(comboBoxUtilisateurs, comboBoxLivres);
+		        updateComboBoxes();
 			}
 		});
 		
@@ -94,7 +98,7 @@ public class BibliothequeApp extends Application {
  			if(livreSelectionne != null) {
  				listeLivres.getItems().remove(livreSelectionne);
  				// Met à jour les ComboBox dans l'onglet emprunts
- 		        updateComboBoxes(comboBoxUtilisateurs, comboBoxLivres);
+ 		        updateComboBoxes();
  			}
  		});
  		
@@ -140,7 +144,7 @@ public class BibliothequeApp extends Application {
 			nomUtilisateurField.clear();
 			
 			// Met à jour les ComboBox dans l'onglet emprunts
-	        updateComboBoxes(comboBoxUtilisateurs, comboBoxLivres);
+	        updateComboBoxes();
 		});
 		
 		supprimerUtilisateurButton.setOnAction((e) -> {
@@ -148,7 +152,7 @@ public class BibliothequeApp extends Application {
 			if(utilisateurSelectionne != null) {
 				listeUtilisateurs.getItems().remove(utilisateurSelectionne);
 				// Mettez à jour les ComboBox dans l'onglet emprunts
-		        updateComboBoxes(comboBoxUtilisateurs, comboBoxLivres);
+		        updateComboBoxes();
 			}
 		});
 		
@@ -177,37 +181,62 @@ public class BibliothequeApp extends Application {
 		comboBoxLivres.setPromptText("Selectionner un livre");
 		
 		// Récupération des données et ajout aux ComboBox
-		updateComboBoxes(comboBoxUtilisateurs, comboBoxLivres);
-		
-		// Créer les  boutons pour enregistrer un emprunt et retourner livre
+		updateComboBoxes();
+
+	    // Colonne pour le titre du livre
+	    TableColumn<Transaction, String> colonneLivre = new TableColumn<>("Livre");
+	    colonneLivre.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLivre().getTitre()));
+
+	    // Colonne pour le nom de l'utilisateur
+	    TableColumn<Transaction, String> colonneUtilisateur = new TableColumn<>("Utilisateur");
+	    colonneUtilisateur.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getUtilisateur().getNom()));
+
+	    // Colonne pour le statut de l'emprunt
+	    TableColumn<Transaction, String> colonneStatut = new TableColumn<>("Statut");
+	    colonneStatut.setCellValueFactory(data -> new SimpleStringProperty(
+	        data.getValue().isRetourne() ? "Retourné" : "En cours"));
+
+	    // Ajout des colonnes au TableView
+	    tableEmprunts.getColumns().addAll(colonneLivre, colonneUtilisateur, colonneStatut);
+	    
+		// Créer les  boutons pour enregistrer un emprunt, retourner livre et supprimer transaction
 		Button enregistrerEmpruntButton = new Button("Enregistrer Emprunt");
 		Button retournerLivreButton = new Button("Retourner Livre");
+		Button supprimerTransactionButton = new Button("Supprimer Transaction");
 		
-		// action a effectuer lors de l'enregistrement d'un Emprunt de livre 
-		enregistrerEmpruntButton.setOnAction((e) -> {
-			// recupere les élements selectionné du combobox
-			Utilisateur utilisateur = comboBoxUtilisateurs.getValue();
-			Livre livre = comboBoxLivres.getValue();
-			if(utilisateur != null && livre != null) {
-				String transaction = utilisateur.getNom() + " a emprunté" + livre.getTitre();
-				transactions.add(transaction);
-				listeEmprunts.getItems().add(transaction);
-			}
-		});
+		// Action pour enregistrer un nouvel emprunt
+	    enregistrerEmpruntButton.setOnAction((e) -> {
+	        Utilisateur utilisateur = comboBoxUtilisateurs.getValue();
+	        Livre livre = comboBoxLivres.getValue();
+	        if (utilisateur != null && livre != null) {
+	            Transaction transaction = new Transaction(utilisateur, livre);
+	            transactions.add(transaction);
+	            rafraichirListeEmprunts();
+	        }
+	    });
 		
-		// action a effectuer lors  du retour d'un livre
-		retournerLivreButton.setOnAction((e) -> {
-			String transaction = listeEmprunts.getSelectionModel().getSelectedItem();
-            if (transaction != null) {
-                transactions.remove(transaction);
-                listeEmprunts.getItems().remove(transaction);
-            }
-		});
+		// Action pour marquer un livre comme retourné
+	    retournerLivreButton.setOnAction((e) -> {
+	        Transaction transactionSelectionnee = tableEmprunts.getSelectionModel().getSelectedItem();
+	        if (transactionSelectionnee != null && !transactionSelectionnee.isRetourne()) {
+	            transactionSelectionnee.setRetourne(true);
+	            rafraichirListeEmprunts();
+	        }
+	    });
+		
+		// Action pour supprimer une transaction d'emprunt
+	    supprimerTransactionButton.setOnAction((e) -> {
+	        Transaction transactionSelectionnee = tableEmprunts.getSelectionModel().getSelectedItem();
+	        if (transactionSelectionnee != null) {
+	            transactions.remove(transactionSelectionnee);
+	            rafraichirListeEmprunts();
+	        }
+	    });
 		
 		// Ajout des composant(ComboBox, bouton et ListView) à un conteneur vertical
 		// Créer un conteneur (VBox) pour organiser les composants crées ci-dessus verticalement 
 	    VBox vbox = new VBox(10); // espaces de  10 pixels entre les élements
-	    vbox.getChildren().addAll(comboBoxUtilisateurs, comboBoxLivres, listeEmprunts, enregistrerEmpruntButton, retournerLivreButton);
+	    vbox.getChildren().addAll(comboBoxUtilisateurs, comboBoxLivres, tableEmprunts, enregistrerEmpruntButton, retournerLivreButton, supprimerTransactionButton);
 
 	    // Mettre a padding de 10px pour la VBox pour ajouter un espace autour du conteneur
 	    vbox.setPadding(new Insets(10));
@@ -218,13 +247,21 @@ public class BibliothequeApp extends Application {
 	}
 	
 	// Methode pour mettre a jour le contenu des ComboBox
-	private void updateComboBoxes(ComboBox<Utilisateur> comboBoxUtilisateurs, ComboBox<Livre> comboBoxLivres) {
+	private void updateComboBoxes() {
 	    comboBoxUtilisateurs.getItems().clear(); // Vide les ComboBox
 	    comboBoxLivres.getItems().clear();
 	    
 	    // Ajoute les utilisateurs et livres actuels aux ComboBox
 	    comboBoxUtilisateurs.getItems().addAll(listeUtilisateurs.getItems());
 	    comboBoxLivres.getItems().addAll(listeLivres.getItems());
+	}
+	
+	// Update Liste Emprunts
+	private void rafraichirListeEmprunts() {
+	    tableEmprunts.getItems().clear();
+	    for (Transaction transaction : transactions) {
+	    	tableEmprunts.getItems().add(transaction);
+	    }
 	}
 	
 	
