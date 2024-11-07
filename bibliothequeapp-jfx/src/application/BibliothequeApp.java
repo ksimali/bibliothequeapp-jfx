@@ -208,10 +208,27 @@ public class BibliothequeApp extends Application {
 	    enregistrerEmpruntButton.setOnAction((e) -> {
 	        Utilisateur utilisateur = comboBoxUtilisateurs.getValue();
 	        Livre livre = comboBoxLivres.getValue();
+	        
 	        if (utilisateur != null && livre != null) {
-	            Transaction transaction = new Transaction(utilisateur, livre);
-	            transactions.add(transaction);
-	            rafraichirListeEmprunts();
+	        	// Vérifier si le livre est déjà emprunté (statut "En cours")
+	        	boolean livreDejaEmprunte = false;
+	        	for(Transaction transaction : transactions) {
+	        		if(transaction.getLivre().equals(livre) && !transaction.isRetourne()) {
+	        			livreDejaEmprunte = true;
+	        			break;
+	        		}
+	        	}
+	        	
+	        	// Si le livre est déjà emprunté, afficher un message d'erreur
+	        	if(livreDejaEmprunte) {
+	        		System.out.println("Le livre est déjà emprunté ! Choisir un autre livre.");
+	        	}else {
+	        		// Ajouter la transaction d'emprunt
+	        		Transaction transaction = new Transaction(utilisateur, livre);
+	 	            transactions.add(transaction);
+	 	            rafraichirListeEmprunts();
+	        	}
+	           
 	        }
 	    });
 		
